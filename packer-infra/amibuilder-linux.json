@@ -1,0 +1,92 @@
+{
+  "variables": {
+    "aws_region": "us-west-2",
+    "ami_name": "pakgo-linux",
+    "ansible_version": "2.9.2",
+    "instance_type": "t3.small"
+  },
+  "builders": [
+    {
+      "name": "AWS AMI BUILDER",
+      "type": "amazon-ebs",
+      "region": "{{user `aws_region`}}",
+      "source_ami_filter": {
+        "filters": {
+          "virtualization-type": "hvm",
+          "name": "ubuntu/images/hvm-ssd/ubuntu-bionic*-amd64-server-*",
+          "root-device-type": "ebs"
+        },
+        "owners": [
+          "099720109477"
+        ],
+        "most_recent": true
+      },
+      "instance_type": "{{user `instance_type`}}",
+      "ssh_username": "ubuntu",
+      "ami_name": "{{user `ami_name` | clean_ami_name}}-{{isotime | clean_ami_name}}",
+      "tags": {
+        "Name": "{{user `ami_name`}}-{{isotime | clean_ami_name}}"
+      },
+      "run_tags": {
+        "Name": "{{user `ami_name`}}-{{isotime | clean_ami_name}}"
+      },
+      "run_volume_tags": {
+        "Name": "{{user `ami_name`}}-{{isotime | clean_ami_name}}"
+      },
+      "snapshot_tags": {
+        "Name": "{{user `ami_name`}}-{{isotime | clean_ami_name}}"
+      },
+      "ami_description": "Gitlab Runner for linux",
+      "associate_public_ip_address": "true",
+      "ami_virtualization_type": "hvm",
+      "spot_price": "auto",
+      "spot_price_auto_product": "Linux/UNIX"
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "shell",
+      "script": "./scripts/stop-all.sh"
+    },
+    {
+      "type": "ansible",
+      "user": "paker",
+      "playbook_file": "../ansible/xenial-prereqs.yml",
+      "extra_arguments": [
+        "--extra-vars",
+        "ansible_python_interpreter=/usr/bin/python3"
+      ]
+    },
+    {
+      "type": "shell",
+      "inline": [
+        "sudo apt-get update -y && sudo apt-get install -y python-pip && sudo pip install ansible=={{user `ansible_version`}}"
+      ]
+    },
+    {
+      "type": "ansible-local",
+      "playbook_file": "../ansible/amibuilder-linux.yml",
+      "role_paths": [
+        "../ansible/roles"
+      ],
+      "playbook_dir": "../ansible",
+      "galaxy_file": "../ansible/amibuilder-linux-requirements.yml"
+    },
+    {
+    "type": "shell",
+    "inline": [
+        "sudo systemctl enable apt-daily.timer",
+        "sudo systemctl enable apt-daily-upgrade.timer"
+      ]
+    }
+  ],
+  "post-processors": [
+    [
+      {
+        "output": "manifest.json",
+        "strip_path": true,
+        "type": "manifest"
+      }
+    ]
+  ]
+}

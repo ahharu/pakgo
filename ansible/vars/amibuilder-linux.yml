@@ -1,0 +1,14 @@
+gitlab_runner_package_name: gitlab-runner
+gitlab_runner_description: 'Linux Runner'
+gitlab_runner_docker_volumes:
+  - "/var/run/docker.sock:/var/run/docker.sock"
+  - "/cache"
+gitlab_runner_home: "/home/gitlab-runner"
+gitlab_runner_user: "gitlab-runner"
+
+ssh_known_hosts_command: "ssh-keyscan -H -T 10"
+ssh_known_hosts_file: "/home/gitlab-runner/.ssh/known_hosts"
+ssh_known_hosts:
+  - git.attackiq.com
+  - community-repo.attackiq.com
+docker_compose_version: 1.25.1

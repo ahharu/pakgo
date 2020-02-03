@@ -1,0 +1,41 @@
+- hosts: all
+  become: yes
+  become_user: root
+  gather_facts: False
+  tasks:
+    - name: fix the mergelist issue with apt module
+      raw: 'find /var/lib/apt/lists -maxdepth 1 -type f -exec rm -v {} \;'
+
+    - name: update apt
+      raw: whoami && sudo apt-get clean && apt -y update
+
+    - name: install python and aptitude (https://github.com/ansible/ansible/issues/16884)
+      raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal aptitude)
+
+    - name: fix the mergelist issue with apt module
+      shell: 'find /var/lib/apt/lists -maxdepth 1 -type f -exec rm -v {} \;'
+
+    - name: install bc on xenial!
+      apt:
+        name: bc
+        state: latest
+
+    - name: Install apt packages to fix locales
+      apt:
+        name:
+          - apt-transport-https
+          - sudo
+          - locales
+          - wget
+        state: latest
+
+    - name: generate locales
+      shell: 'locale-gen en_US.UTF-8'
+
+    - name: Add lang and LC_ALL
+      lineinfile:
+        path: /etc/default/locale
+        line: "{{ item }}"
+      with_items:
+        - 'LANG=en_US.UTF-8'
+        - 'LC_ALL=C'

@@ -1,0 +1,22 @@
+- hosts: localhost
+  connection: local
+  remote_user: ubuntu
+  become: yes
+  become_user: root
+  gather_facts: True
+  vars_files:
+    - group_vars/all
+    - vars/amibuilder-linux.yml
+  vars:
+    - ec2_tag_Name: "{{ ansible_fqdn }}"
+  pre_tasks:
+    - debug: var=ansible_fqdn
+    - debug: var=playbook_dir
+    - name: update apt
+      apt:
+        update_cache: yes
+        upgrade: full
+      async: 3600
+      poll: 60         
+  roles:
+    - role: geerlingguy.docker

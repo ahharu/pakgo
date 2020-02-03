@@ -2,6 +2,7 @@ FROM alpine:3.11
 
 ENV TERRAFORM_VERSION=0.12.9
 ENV PYTHONUNBUFFERED=1
+ENV USER=root
 
 ENV PACKER_VERSION=1.3.2 \
     PACKER_OSNAME=linux \
@@ -13,6 +14,9 @@ ENV PACKER_ZIPFILE=packer_${PACKER_VERSION}_${PACKER_OSNAME}_${PACKER_OSARCH}.zi
 
 ADD . /app
 WORKDIR /app
+
+
+RUN adduser -D -g '' paker
 
 # Install packer in path
 ADD https://releases.hashicorp.com/packer/${PACKER_VERSION}/${PACKER_ZIPFILE} ${PACKER_DEST}/

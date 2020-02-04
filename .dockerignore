@@ -1,1 +1,4 @@
 go-hello-world/
+.gitignore
+.dockerignore
+.git/

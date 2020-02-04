@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
-./build-app.sh
+PROJECT_NAME=$1
+
+./build-${PROJECT_NAME}.sh
+echo "$PROJECT_NAME"
+
+$FILE_EXECUTE
 
 docker-compose build

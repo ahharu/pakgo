@@ -1,0 +1,40 @@
+- hosts: localhost
+  connection: local
+  vars:
+    regex: "[`'\"]"
+    replace: ""
+  vars_files:
+    - "group_vars/all"
+
+  pre_tasks:
+    - name: Get my public IP
+      ipify_facts:
+      register: public_ip
+
+    - set_fact:
+        my_ip: "{{ public_ip }}"
+  tasks:
+    - s3_bucket:
+        name: "{{project_name}}-store"
+        region: "{{region}}"
+        state: present
+        force: yes
+    - terraform:
+        project_path: "{{playbook_dir}}/../tf-infra/"
+        state: "{{ state | default('present') }}"
+        force_init: true
+        lock: true
+        workspace: "{{ environ }}"
+        backend_config:
+          region: "{{region}}"
+          bucket: "{{project_name}}-store"
+          key: "{{project_name}}"
+        variables:
+          public_ip: "{{ public_ip.ansible_facts.ipify_public_ip }}"
+          aws_region: "{{region}}"
+          project_name: "{{project_name}}"
+        variables_file: "{{playbook_dir}}/../tf-infra/tfvars/{{project_name}}.tfvars"
+      register: terraform_result
+
+    - set_fact:
+        terraform_outputz: "{{terraform_result}}"

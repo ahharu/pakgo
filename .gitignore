@@ -1,1 +1,13 @@
 go-hello-world/
+
+.idea
+.vagrant
+.terragrunt-cache*
+ubuntu-*.log
+terraform*config
+values*.yaml
+tf_output*
+maintenance-*.yaml
+devops
+.DS_Store
+

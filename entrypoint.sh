@@ -8,6 +8,6 @@ then
 fi
 
 cd packer-infra
-##packer build -var-file=env/$PACKER_NAME.json $PACKER_NAME.json
+packer build -var-file=env/$PACKER_NAME.json $PACKER_NAME.json
 
 /bin/bash

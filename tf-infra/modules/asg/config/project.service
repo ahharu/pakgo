@@ -1,0 +1,9 @@
+[Unit]
+Description=Service ${project_name}
+
+[Service]
+Type=simple
+ExecStart=/bin/bash /usr/bin/${project_name}.sh
+
+[Install]
+WantedBy=multi-user.target

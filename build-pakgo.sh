@@ -1,8 +1,12 @@
 #!/usr/bin/env bash
 
-rm -rf go-hello-world
-git clone git@github.com:stayforlong/go-hello-world.git
+if [ ! -d go-hello-world ]
+then
+  git clone git@github.com:stayforlong/go-hello-world.git
+  cd go-hello-world
+else
+  cd go-hello-world
+  git pull
+fi
 
-cd go-hello-workd
-
-make docker-build
+#make docker-build

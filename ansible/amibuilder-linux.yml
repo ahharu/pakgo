@@ -9,7 +9,7 @@
     - vars/amibuilder-linux.yml
   vars:
     - ec2_tag_Name: "{{ ansible_fqdn }}"
-  pre_tasks:
+  tasks:
     - debug: var=ansible_fqdn
     - debug: var=playbook_dir
     - name: update apt

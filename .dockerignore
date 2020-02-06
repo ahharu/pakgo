@@ -1,4 +1,12 @@
-go-hello-world/
 .gitignore
 .dockerignore
 .git/
+LICENSE
+README.md
+Makefile
+*/LICENSE
+*/README.md
+*/Makefile
+*/.gitignore
+.go
+*/.go

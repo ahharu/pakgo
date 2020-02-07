@@ -42,4 +42,4 @@
         terraform_outputz: "{{terraform_result}}"
 
     - debug:
-        var: terraform_outputz
+        msg: "The dns record is {{terraform_result.outputs.dns_name}}"

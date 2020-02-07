@@ -12,5 +12,5 @@ module "asg" {
   vpc_subnets         = "${module.vpc.public_subnets}"
   public_ip           = "${var.public_ip}"
   instance_type       = "${var.instance_type}"
-  file_name           = "${var.file_name}"
+  ssh_allowed_cidrs   = "${var.ssh_allowed_cidrs}"
 }

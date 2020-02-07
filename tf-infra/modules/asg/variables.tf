@@ -3,10 +3,6 @@ variable "project_name" {
   description = "Solution name, e.g. 'app' or 'cluster'"
 }
 
-variable "file_name" {
-  description = "file to exec"
-}
-
 variable "vpc_subnets" {
   type        = list(string)
   description = "List of vpc subnets"
@@ -34,7 +30,7 @@ variable "public_ip" {
 
 variable "ssh_allowed_cidrs" {
   type        = list
-  description = "VPC ID"
+  description = "Extra SSH cidrs"
   default     = []
 }
 

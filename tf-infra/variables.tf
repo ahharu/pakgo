@@ -17,8 +17,9 @@ variable "enable_nat_gateway" {
   default = false
 }
 
-variable "resources_prefix" {
-  default = "resources"
+variable "ssh_allowed_cidrs" {
+  type = list
+  default = []
 }
 
 variable "vpc_cidr" {
@@ -57,12 +58,8 @@ variable "instance_type" {
   default = "t3.medium"
 }
 
-variable "file_name" {
-
-}
-
 variable "alb_target_group_healthcheck_interval" {
-  default = 30 # seconds
+  default = 5 # seconds
 }
 
 variable "alb_target_group_healthcheck_path" {
@@ -89,16 +86,6 @@ variable "alb_http_target_group_healthcheck_port" {
   default = 80
 }
 
-
-variable "alb_http_target_group_healthcheck_protocol" {
-  default = "HTTP"
-}
-
-
-variable "alb_http_target_group_healthcheck_matcher" {
-  default = "200,301" # comma-separated list of status codes
-}
-
 variable "alb_idle_timeout" {
   default = 300 # seconds
 }
@@ -114,8 +101,4 @@ variable "alb_target_group_healthcheck_protocol" {
 
 variable "alb_target_group_healthcheck_matcher" {
   default = 200 # comma-separated list of status codes
-}
-
-variable "alb_target_group_healthcheck_matcher_data" {
-  default = "200,301" # comma-separated list of status codes
 }

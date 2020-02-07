@@ -2,6 +2,11 @@
 
 It is a docker self-contained project to deploy go-based apps to aws on ASG
 
+
+# What do I need on my computer? 
+
+Docker!!
+
 # How to use ..
 
 `make deploy`

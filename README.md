@@ -13,7 +13,7 @@ Docker!!
 
 You can configure some options DIRECTLY from the make call, by setting up environment variables like this
 
-`REGION=ap-southeast-1 make deploy`
+`PROJECT_NAME=pakgo make deploy`
 
 These are the variables:
 

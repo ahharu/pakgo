@@ -1,6 +1,6 @@
 {
   "aws_region": "us-west-2",
-  "ami_name": "pakgo-linux",
+  "ami_name": "pakgo",
   "ansible_version": "2.9.2",
   "instance_type": "t2.small"
 }

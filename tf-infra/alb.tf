@@ -1,0 +1,23 @@
+module "alb" {
+  source                                            = "./modules/alb"
+  enabled                                           = "true"
+  resource_prefix                                   = "${var.project_name}-${terraform.workspace}"
+  alb_idle_timeout                                  = "${var.alb_idle_timeout}"
+  alb_target_group_healthcheck_interval             = "${var.alb_target_group_healthcheck_interval}"
+  alb_target_group_healthcheck_path                 = "${var.alb_target_group_healthcheck_path}"
+  alb_target_group_healthcheck_protocol             = "${var.alb_target_group_healthcheck_protocol}"
+  alb_target_group_healthcheck_timeout              = "${var.alb_target_group_healthcheck_timeout}"
+  alb_target_group_healthcheck_healthy_threshold    = "${var.alb_target_group_healthcheck_healthy_threshold}"
+  alb_target_group_healthcheck_unhealthy_threshold  = "${var.alb_target_group_healthcheck_unhealthy_threshold}"
+  alb_target_group_healthcheck_matcher              = "${var.alb_target_group_healthcheck_matcher}"
+  alb_ingress_cidr                                  = "${var.alb_ingress_cidr}"
+  target_group_names                                = ["${var.project_name}-http"]
+  target_group_http_ports                           = ["${var.alb_http_target_group_port}"]
+  target_group_healthcheck_http_ports               = ["${var.alb_http_target_group_healthcheck_port}"]
+  listener_rule_http_priorities                     = ["100"]
+  listener_rule_path_patterns                       = ["/"]
+  asg_name                                          = "${module.asg.asg_name}"
+  asg_sg_id                                         = "${module.asg.alb_sg_id}"
+  vpc_id                                            = "${module.vpc.id}"
+  vpc_subnets                                       = "${module.vpc.public_subnets}"
+}

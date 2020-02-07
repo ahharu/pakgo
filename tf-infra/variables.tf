@@ -60,3 +60,62 @@ variable "instance_type" {
 variable "file_name" {
 
 }
+
+variable "alb_target_group_healthcheck_interval" {
+  default = 30 # seconds
+}
+
+variable "alb_target_group_healthcheck_path" {
+  default = "/health"
+}
+
+variable "alb_target_group_healthcheck_timeout" {
+  default = 5 # seconds
+}
+
+variable "alb_target_group_healthcheck_healthy_threshold" {
+  default = 5
+}
+
+variable "alb_target_group_healthcheck_unhealthy_threshold" {
+  default = 2
+}
+
+variable "alb_http_target_group_port" {
+  default = 80
+}
+
+variable "alb_http_target_group_healthcheck_port" {
+  default = 80
+}
+
+
+variable "alb_http_target_group_healthcheck_protocol" {
+  default = "HTTP"
+}
+
+
+variable "alb_http_target_group_healthcheck_matcher" {
+  default = "200,301" # comma-separated list of status codes
+}
+
+variable "alb_idle_timeout" {
+  default = 300 # seconds
+}
+
+variable "alb_ingress_cidr" {
+  default = "0.0.0.0/0"
+}
+
+
+variable "alb_target_group_healthcheck_protocol" {
+  default = "HTTP"
+}
+
+variable "alb_target_group_healthcheck_matcher" {
+  default = 200 # comma-separated list of status codes
+}
+
+variable "alb_target_group_healthcheck_matcher_data" {
+  default = "200,301" # comma-separated list of status codes
+}

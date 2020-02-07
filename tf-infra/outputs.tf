@@ -9,3 +9,7 @@ output "vpc_arn" {
 output "vpc_id" {
   value = "${module.vpc.id}"
 }
+
+output "dns_name" {
+  value = "${module.alb.dns_name}"
+}

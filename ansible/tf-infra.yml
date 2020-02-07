@@ -40,3 +40,6 @@
 
     - set_fact:
         terraform_outputz: "{{terraform_result}}"
+
+    - debug:
+        var: terraform_outputz

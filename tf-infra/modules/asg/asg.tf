@@ -35,7 +35,7 @@ resource "aws_launch_configuration" "launch_config" {
 #
 resource "aws_autoscaling_group" "default" {
   count                     = var.enabled ? 1 : 0
-  name                      = "${var.project_name}-${terraform.workspace}-asg"
+  name                      = "${var.project_name}-${terraform.workspace}-${aws_launch_configuration.launch_config.name}-asg"
   min_size                  = "${var.min_size}"
   desired_capacity          = "${var.def_size}"
   max_size                  = "${var.max_size}"
@@ -47,5 +47,13 @@ resource "aws_autoscaling_group" "default" {
   lifecycle {
     create_before_destroy = true
   }
+
+  tags = [
+    {
+      key                 = "Name"
+      value               = "${var.project_name}-${terraform.workspace}-ec2"
+      propagate_at_launch = true
+    }
+  ]
 
 }

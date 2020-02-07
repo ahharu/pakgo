@@ -5,43 +5,10 @@ resource "aws_lb" "alb" {
   load_balancer_type = "application"
   ip_address_type    = "ipv4"
   idle_timeout       = "${var.alb_idle_timeout}"
-  security_groups    = ["${aws_security_group.alb.id}"]
-  subnets            = ["${data.aws_subnet_ids.kubernetes.ids}"]
+  security_groups    = ["${var.asg_sg_id}"]
+  subnets            = "${var.vpc_subnets}"
 
-  tags {
-    Name        = "${var.resource_prefix}alb"
-    Environment = "${terraform.workspace}"
-  }
-}
-
-resource "aws_security_group" "alb" {
-  count       = "${var.enabled ? 1 : 0}"
-  name        = "${var.resource_prefix}alb"
-  description = "${var.resource_prefix}alb"
-  vpc_id      = "${data.aws_vpc.kubernetes.id}"
-
-  ingress {
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = "${split(",",var.alb_ingress_cidr)}"
-  }
-
-  ingress {
-    from_port   = 443
-    to_port     = 443
-    protocol    = "tcp"
-    cidr_blocks = "${split(",",var.alb_ingress_cidr)}"
-  }
-
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  tags {
+  tags = {
     Name        = "${var.resource_prefix}alb"
     Environment = "${terraform.workspace}"
   }
@@ -52,7 +19,7 @@ resource "aws_lb_target_group" "http" {
   name        = "${var.resource_prefix}http-${var.target_group_names[count.index]}"
   port        = "${var.target_group_http_ports[count.index]}"
   protocol    = "HTTP"
-  vpc_id      = "${data.aws_vpc.kubernetes.id}"
+  vpc_id      = "${var.vpc_id}"
   target_type = "instance"
 
   health_check {
@@ -66,9 +33,8 @@ resource "aws_lb_target_group" "http" {
     matcher             = "${var.alb_target_group_healthcheck_matcher}"
   }
 
-  tags {
+  tags = {
     Name        = "${var.resource_prefix}${var.target_group_names[count.index]}" # https
-    Cluster     = "${var.cluster_name}"
     Environment = "${terraform.workspace}"
   }
 
@@ -81,13 +47,13 @@ resource "aws_lb_target_group" "http" {
 resource "aws_autoscaling_attachment" "nodes_http" {
   count                  = "${var.enabled ? length(var.target_group_names) : 0}"
   alb_target_group_arn   = "${aws_lb_target_group.http.*.arn[count.index]}"
-  autoscaling_group_name = "${data.aws_autoscaling_groups.nodes.names[0]}"
+  autoscaling_group_name = "${var.asg_name}"
 }
 
 
 resource "aws_alb_listener" "listener_http" {
   count             = "${var.enabled ? 1 : 0}"
-  load_balancer_arn = "${aws_lb.alb.arn}"
+  load_balancer_arn = "${aws_lb.alb[count.index].arn}"
   port              = 80
   protocol          = "HTTP"
 
@@ -99,17 +65,17 @@ resource "aws_alb_listener" "listener_http" {
 
 
 resource "aws_lb_listener_rule" "forward_http" {
-  count         = "${var.enabled ? length(var.target_group_names) - 1 : 0}"
-  listener_arn  = "${aws_alb_listener.listener_http.arn}"
-  priority      = "${var.listener_rule_http_priorities[count.index + 1]}"
+  count         = "${var.enabled ? length(var.target_group_names) : 0}"
+  listener_arn  = "${aws_alb_listener.listener_http[0].arn}"
+  priority      = "${var.listener_rule_http_priorities[count.index]}"
 
   action {
     type             = "forward"
-    target_group_arn = "${aws_lb_target_group.http.*.arn[count.index + 1]}"
+    target_group_arn = "${aws_lb_target_group.http.*.arn[count.index]}"
   }
 
   condition {
     field  = "path-pattern"
-    values = ["${var.listener_rule_path_patterns[count.index + 1]}"]
+    values = ["${var.listener_rule_path_patterns[count.index]}"]
   }
 }

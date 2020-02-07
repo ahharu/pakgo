@@ -8,7 +8,7 @@ then
 fi
 
 cd packer-infra
-#packer build -var "environment=$ENVIRONMENT" -var "file_name=$FILE_NAME" -var "public_key_name=$SSH_KEY" -var-file=env/$PACKER_NAME.json $PACKER_NAME.json
+packer build -var "environment=$ENVIRONMENT" -var "file_name=$FILE_NAME" -var "public_key_name=$SSH_KEY" -var-file=env/$PACKER_NAME.json $PACKER_NAME.json
 
 cd -
 cd ansible

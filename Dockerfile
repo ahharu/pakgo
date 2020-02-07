@@ -47,4 +47,4 @@ RUN unzip terraform_${TERRAFORM_VERSION}_linux_amd64.zip && \
 
 ENV PATH="${PATH}:/root/bin:/out/usr/bin:/out/usr/local/bin"
 
-ENTRYPOINT ["/bin/bash"]
+ENTRYPOINT ["/app/entrypoint.sh"]

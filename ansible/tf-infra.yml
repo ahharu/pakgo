@@ -15,7 +15,7 @@
         my_ip: "{{ public_ip }}"
   tasks:
     - s3_bucket:
-        name: "{{project_name}}-store"
+        name: "{{project_name}}-store-stayforlong"
         region: "{{region}}"
         state: present
         force: yes

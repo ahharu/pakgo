@@ -9,4 +9,4 @@ else
   git pull
 fi
 
-#make docker-build
+make docker-build

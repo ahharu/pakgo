@@ -7,6 +7,8 @@ It is a docker self-contained project to deploy go-based apps to aws on ASG
 
 Docker!!
 
+Your credentials setup in `~/.aws/credentials` ( when you configure awscli you should have them here )
+
 # How to use ..
 
 `make deploy`
